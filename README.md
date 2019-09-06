@@ -13,8 +13,7 @@ More feature will be Coming Soon.
 <p float="left">
  <img src="https://content.screencast.com/users/dyahh/folders/hungrytummy/media/3b1cefcf-5c42-43e3-a0b7-187875d2dd03/mainscreen.PNG" width="200" height="350" alt="Insert Table Number"/>
  <img src="https://content.screencast.com/users/dyahh/folders/hungrytummy/media/1fa44430-1dc8-448b-b48d-b7e61859f15f/menuscreen.PNG" width="200" height="350" alt="Home Menu"/>
- <img src="https://content.screencast.com/users/dyahh/folders/hungrytummy/media/2037ae63-97d4-40a4-bab9-f78306dddd0f/orderscreen.PNG
-" width="200" height="350" alt="order"/>
+ <img src="https://content.screencast.com/users/dyahh/folders/hungrytummy/media/2037ae63-97d4-40a4-bab9-f78306dddd0f/orderscreen.PNG" width="200" height="350" alt="order"/>
  <img src="https://content.screencast.com/users/dyahh/folders/hungrytummy/media/dc2817c2-04a5-414c-8b49-32fa8ff12247/billscreen.PNG" width="200" height="350" alt="Bill"/>
  <img src="https://content.screencast.com/users/dyahh/folders/hungrytummy/media/8ea42cb4-905a-45c6-aaf9-b47eaf8be3bb/checkoutbill.PNG" width="200" height="350" alt="Finish"/>
 </p>
