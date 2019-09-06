@@ -6,16 +6,11 @@ const initialState = {
 
 const category = (state = initialState, action) => {
     switch (action.type) {
-        case 'GET_CATEGORY':
-            return {
-                ...state,
-                isLoading: true
-            }
         case 'GET_CATEGORY_PENDING':
             return {
                 ...state,
                 item: null,
-                isLoading: false
+                isLoading: true
             }
         case 'GET_CATEGORY_FULFILLED':
             return{

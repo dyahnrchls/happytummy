@@ -6,16 +6,11 @@ const initialState = {
 
 const menu = (state = initialState, action) => {
     switch (action.type) {
-        case 'GET_MENU':
-            return {
-                ...state,
-                isLoading: true
-            }
         case 'GET_MENU_PENDING':
             return {
                 ...state,
                 item: null,
-                isLoading: false
+                isLoading: true
             }
         case 'GET_MENU_FULFILLED':
             return {
@@ -29,16 +24,11 @@ const menu = (state = initialState, action) => {
                 isLoading: false,
                 error: payload.message
             }
-        case 'GET_MENU_CATEGORY':
-            return {
-                ...state,
-                isLoading: true
-            }
         case 'GET_MENU_CATEGORY_PENDING':
             return {
                 ...state,
                 item: null,
-                isLoading: false
+                isLoading: true
             }
         case 'GET_MENU_CATEGORY_FULFILLED':
             return {

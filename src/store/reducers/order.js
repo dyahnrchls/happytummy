@@ -2,8 +2,6 @@ const initialState = {
     item: [],
     isLoading: false,
     error: null,
-    addItem: [{ id: 0, qty: 0 }],
-    total: 0
 }
 
 const order = (state = initialState, action) => {
@@ -11,23 +9,17 @@ const order = (state = initialState, action) => {
         case 'POST_ORDER':
             return {
                 ...state,
-                data: action.payload
+                item: action.payload
             }
-        case 'ADD_TO_ORDER':
-            let existedItem = state.addItem.find(item => item.id === action.payload)
-            if(existedItem){
-                addItem.qty+=1
-                return{
-                    ...state,
-                    total: state.total + addItem.qty
-                }
-            }else{
-                addItem.qty = 1
-                return {
-                    ...state,
-                    addItem: [...state.addItem, action.payload],
-                    total: state.total + addItem.qty
-                }
+        case 'ADD_TO_ORDER':           
+            return{
+                ...state,
+                item: [...state.item, action.payload]
+            }
+        case 'UPDATE_ORDER':
+            return{
+                ...state,
+                item:[...action.payload]
             }
         default:
             return state 

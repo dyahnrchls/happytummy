@@ -15,7 +15,7 @@ export const postTransaction = () => {
     }
 }
 
-export const patchTransaction = (id) => {
+export const updateTransaction = (id) => {
     return{
         type: 'PATCH_TRANSACTION',
         payload: axios.patch(`${env.host}/transaction/${id}`)
