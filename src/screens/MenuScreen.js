@@ -7,7 +7,7 @@ import OrderButton from '../components/OrderButton'
 import { connect } from 'react-redux'
 import { getCategory } from '../store/actions/category'
 import { getMenu, getMenuCategory } from '../store/actions/menu'
-import { postOrder, addToOrder } from '../store/actions/order'
+import { postOrder, addToOrder, updateOrder } from '../store/actions/order'
 
 
 class MenuScreen extends Component{
@@ -19,11 +19,7 @@ class MenuScreen extends Component{
 
     constructor(props){
         super(props)
-        this.state = {
-            order: [],
-            cart: [],
-            total: 0
-        }
+        
     }
 
     componentDidMount(){
@@ -32,7 +28,11 @@ class MenuScreen extends Component{
         }
 
     getMenuByCategory = (categoryId) => {
-        this.props.dispatch(getMenuCategory(categoryId))
+        if(categoryId === 1){
+            this.props.dispatch(getMenu())
+        }else{
+            this.props.dispatch(getMenuCategory(categoryId))
+        }
     }
 
     handleOrder = (item) => {
@@ -41,10 +41,34 @@ class MenuScreen extends Component{
         })     
     }
 
-    countMenu = (id) => {
-        this.props.dispatch(addToOrder(id))
-        // let item = parseInt(this.props.order.addItem.filter(x => x === id).length) + 1
-        alert(this.props.order.addItem)
+    countMenu = async (data) => {
+        let order = this.props.order.item
+        const index = order.findIndex(item => item.id === data.id)
+        
+        let orderData = order[index]
+        
+        if(index >= 0){    
+            let incQty = orderData.qty + 1
+            let total = orderData.price * incQty
+            let incOrder = {
+                ...orderData,
+                qty: incQty,
+                totalPrice: total
+            }
+
+            order[index] = incOrder
+            await this.props.dispatch(updateOrder(order))
+
+        }else{
+            data = {
+                ...data,
+                qty: 1,
+                totalPrice: data.price,
+                status: 0
+            }
+
+            await this.props.dispatch(addToOrder(data))
+        }
     }
 
     confirmOrder = () => {
@@ -65,7 +89,7 @@ class MenuScreen extends Component{
                     <Text style={{ fontSize: 17, fontWeight: 'bold' }}>02:13</Text>
                 </View>
                 <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <Text style={{paddingLeft: 10, paddingTop: 5, fontSize:25, fontWeight:'bold'}}>Menu</Text>
+                    <Text style={{paddingLeft: 10, paddingTop: 5, fontSize:25, fontWeight:'bold'}}>menu</Text>
                     <TouchableOpacity style={{justifyContent: 'flex-end', flex: 1, alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('TransactionScreen')}>
                         <Text style={{ paddingHorizontal: 10, paddingTop: 5, fontSize: 15, fontWeight: 'bold'}}>View Bill</Text>
                     </TouchableOpacity>
@@ -75,7 +99,7 @@ class MenuScreen extends Component{
                             {this.props.category.item!==null && this.props.category.item.map((item, index) => {
                                 return(
                                     <TouchableOpacity key={index} onPress={() => this.getMenuByCategory(item.id)} style={{ marginRight: 15, backgroundColor:'#cd84f1', paddingVertical: 8, paddingHorizontal:15, borderRadius: 10, elevation:8, marginBottom: 10}}>
-                                            <Text style={{fontWeight: 'bold'}}>{item.name}</Text>
+                                            <Text style={{fontWeight: 'bold', color: 'white'}}>{item.name}</Text>
                                     </TouchableOpacity>
                                 )}
                             )}
@@ -86,13 +110,13 @@ class MenuScreen extends Component{
                         data={this.props.menu.item}
                         numColumns={2}
                         showsVerticalScrollIndicator={false}
-                        keyExtractor={(item, index) => item.id}
+                        keyExtractor={item => item.id.toString()}
                         renderItem={(item, index) => 
-                            <TouchableOpacity key={index} onPress={() => this.countMenu(item.id)} style={{borderRadius: 20, justifyContent: 'center', marginHorizontal: 10, marginTop: 10, backgroundColor: '#FFFF', width: 180, height: 130,elevation:5}}>
-                                <ImageBackground source={require('../assets/images/pastry.jpg')} style={{width:'100%', height:'100%'}}>
-                                    <View style={{ flex: 1, justifyContent: 'flex-end', marginTop: 70, height: '100%', alignItems: 'flex-end', backgroundColor:'rgba(52, 52, 52, 0.8)'}}>
+                            <TouchableOpacity key={index} onPress={() => this.countMenu(item.item)} style={{borderRadius: 20, justifyContent: 'center', marginHorizontal: 10, marginTop: 10, backgroundColor: '#FFFF', width: 180, height: 130,elevation:5}}>
+                                <ImageBackground source={{ uri: item.item.photoUrl}} imageStyle={{borderRadius:20}} style={{width:'100%', height:'100%', borderRadius: 20}}>
+                                    <View style={{ flex: 1, justifyContent: 'flex-end', marginTop: 80, height: '100%', alignItems: 'flex-end', backgroundColor:'rgba(52, 52, 52, 0.8)'}}>
                                         <Text style={{ alignSelf: 'flex-start', padding: 5,fontWeight: 'bold', color:'white',fontSize: 18, marginTop: 10}}>{item.item.name}</Text>
-                                        <Text style={{ alignSelf: 'flex-start', padding: 5, fontWeight: 'bold', color: 'white', fontSize: 13 }}>Price: {item.item.price}</Text>
+                                        <Text style={{ alignSelf: 'flex-start', paddingLeft: 5, paddingBottom: 5, fontWeight: 'bold', color: 'white', fontSize: 13 }}>Price: {item.item.price}</Text>
                                     </View>
                                 </ImageBackground>
                             </TouchableOpacity>
@@ -101,7 +125,7 @@ class MenuScreen extends Component{
                     <View style={{height:80}}></View>
                 </View>
                 <View>
-                    <OrderButton text="VIEW ORDER" button={() => this.props.navigation.navigate('OrderScreen')}/>
+                    <OrderButton text="check your order" button={() => this.props.navigation.navigate('OrderScreen')}/>
                 </View>                
             </View>
         )
