@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
 
-export default class ConfirmButton extends Component {
+export default class BillButton extends Component {
     render() {
         return (
-            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'space-between', marginHorizontal: 10 ,alignItems: 'center' }}>
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10, alignItems: 'center' }}>
                 <TouchableOpacity style={styles.button1} onPress={this.props.button1}>
-                    <Text style={{ fontWeight: 'bold', color:'#dfe6e9' }} >
+                    <Text style={{ fontWeight: 'bold', color: '#dfe6e9' }} >
                         {this.props.text1}
                     </Text>
                 </TouchableOpacity>
