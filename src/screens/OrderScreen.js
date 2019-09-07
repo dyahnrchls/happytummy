@@ -1,33 +1,12 @@
 import React, {Component} from 'react'
-import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native'
+import {View, Text, TouchableOpacity, Image, FlatList, Alert} from 'react-native'
 
 import ConfirmButton from '../components/ConfirmButton'
+import { connect } from 'react-redux'
+import {updateOrder, postOrder} from '../store/actions/order'
+import AsyncStorage from '@react-native-community/async-storage'
 
-
-const orderList = [
-    {
-        id: 1,
-        name: "choco lava",
-        qty: 2
-    },
-    {
-        id: 4,
-        name: "ice cream",
-        qty: 4
-    },
-    {
-        id: 6,
-        name: "fried chicken",
-        qty: 2
-    },
-    {
-        id: 7,
-        name: "chef's salad",
-        qty: 3
-    }
-]
-
-export default class OrderScreen extends Component {
+class OrderScreen extends Component {
     static navigationOptions = {
         header: null
     }
@@ -35,67 +14,135 @@ export default class OrderScreen extends Component {
     constructor(props){
         super(props)
         this.state = {
-            item: [],
-            total: 1,
-            visible: false,
-            price: 20000
+            transactionId: 0
         }
     }
 
-    incrementHandler = () => {
-        const setPrice = 20000
-        this.setState({
-            total: this.state.total + 1,
-            price: this.state.price + setPrice
-        })
+    getTransactionId = async () => {
+        try{
+            const id = await AsyncStorage.getItem('TRANSACTION_ID')
+            console.log(id)
+            this.setState({
+                transactionId: id
+            })
+        }catch(e){
+            console.log(e)
+        }
     }
 
-    decrementHandler = () => {
-        const setPrice = this.state.price
-        if(this.state.total === 0){
-            this.setState({
-                total: 0
-            })
+    componentDidMount(){
+        this.getTransactionId()
+    }
+
+    incrementHandler = async (id) => {
+        let order = this.props.order.item
+        const index = order.findIndex(item => item.id === id)
+        
+        let orderData = order[index]
+        let incQty = orderData.qty + 1
+
+        if(orderData.qty > 1){
+            let total = orderData.price * incQty
+            let incOrder = {
+                ...orderData,
+                qty: incQty,
+                totalPrice: total
+            }
+            order[index] = incOrder
+            await this.props.dispatch(updateOrder(order))
         }else{
-            this.setState({
-                total: this.state.total - 1,
-                price: this.state.price - setPrice
-            })
+            let incOrder = {
+                ...orderData,
+                qty: incQty,
+                totalPrice: orderData.price
+            }
+            order[index] = incOrder
+            await this.props.dispatch(updateOrder(order))
         }
+    }
+
+    decrementHandler = async (id) => {
+        let order = this.props.order.item
+        const index = order.findIndex(item => item.id === id)
+
+        let orderData = order[index]
+        let decQty = orderData.qty - 1
+        
+        if(orderData.qty > 1){
+            let total = orderData.price * decQty
+            let decOrder = {
+                ...orderData,
+                qty: decQty,
+                totalPrice: total
+            }
+            order[index] = decOrder
+            await this.props.dispatch(updateOrder(order))
+        }else{
+            order.splice(index, 1)
+            await this.props.dispatch(updateOrder(order))
+        }
+    }
+
+    transactionHandler = () => {
+        this.props.order.item.map((item) => {
+            let data = {
+                menuId: item.id,
+                transactionId: parseInt(this.state.transactionId),
+                qty: item.qty,
+                price: item.totalPrice,
+                status: item.status
+            }
+            console.log(data)
+            this.props.dispatch(postOrder(data))
+        })
+        this.props.order.item.splice(0, (this.props.order.item.length))
+        this.props.navigation.navigate('TransactionScreen')
+    }
+
+    confirmHandler = () => {
+        Alert.alert(
+            'Confirm orders',
+            'confirm??',
+            [
+                {text:'Cancel', style: 'cancel'},
+                {text:'Ok', onPress: () => this.transactionHandler()}
+            ],
+            {cancelable: true}
+        )
     }
 
 
     render(){
         return(
             <View style={{ backgroundColor: '#dfe6e9' , flex:1}}>
-                <View style={{marginBottom: 10}}>
+                <View style={{marginBottom: 10, height: 800}}>
                 <Text style={{ paddingLeft: 20, paddingTop: 20, fontSize: 25, fontWeight: 'bold' }}>My Order {this.state.clicked}</Text>   
                 <FlatList style={{ margin: 5 }}
-                    data={orderList}
+                    data={this.props.order.item}
                     showsVerticalScrollIndicator={false}
-                    keyExtractor={item => item.id}
-                    renderItem={(item, index) => 
-                <View key={index} style={{ borderRadius: 5, marginHorizontal: 10, marginTop: 20, padding: 10, backgroundColor: '#ecf0f1', flexDirection: 'row', justifyContent: 'space-between', height: 80, elevation: 8}}>
+                    keyExtractor={item => item.id.toString()}
+                    renderItem={(item) => 
+                <View style={{ borderRadius: 5, marginHorizontal: 10, marginTop: 20, padding: 10, backgroundColor: '#ecf0f1', flexDirection: 'row', justifyContent: 'space-between', height: 80, elevation: 8}}>
                     <View style={{flexDirection:'row'}}>
-                        <Image source={require('../assets/images/pastry.jpg')} style={{width:70, height:'100%'}} />
+                            <Image source={{ uri: item.item.photoUrl }} style={{width:70, height:'100%'}} />
                         <View style={{marginLeft:10}}>
                             <View>
                                 <Text style={{ fontSize: 18 }}>{item.item.name}</Text>
                             </View>
                             <View style={{marginVertical:10}}>
-                                <Text style={{fontSize: 15, alignSelf:'flex-start'}}>Price: {this.state.price}</Text>
+                                <Text style={{fontSize: 15, alignSelf:'flex-start'}}>Price: {item.item.totalPrice}</Text>
                             </View>
                         </View>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{ flexDirection: 'row', borderRadius: 5}}>
-                            <TouchableOpacity style={{ paddingHorizontal: 10, backgroundColor:'#dfe4ea',borderWidth:1, height:30}} onPress={() => this.decrementHandler()}>
+                            <TouchableOpacity style={{ paddingHorizontal: 10, backgroundColor:'#dfe4ea',borderRadius: 50, height:30}} onPress={() => this.decrementHandler(item.item.id)}>
                                 <Text style={{fontSize:18, fontWeight:'bold'}}>-</Text>
                             </TouchableOpacity >
-                            <View style={{ paddingHorizontal: 10, borderBottomWidth: 1, borderTopWidth: 1}}>
-                                <Text style={{ alignSelf:'center', fontSize: 18 }}>{this.state.total}</Text>
+                            <View style={{ paddingHorizontal: 10}}>
+                                <Text style={{ alignSelf:'center', fontSize: 18 , fontWeight:'bold'}}>{item.item.qty}</Text>
                             </View>
-                            <TouchableOpacity style={{ paddingHorizontal: 10, borderWidth: 1, backgroundColor: '#dfe4ea'}} onPress={() => this.incrementHandler()}>
+                                    <TouchableOpacity style={{ paddingHorizontal: 10, borderRadius: 50, backgroundColor: '#dfe4ea'}} onPress={() => this.incrementHandler(item.item.id)}>
                                 <Text style={{ fontSize: 18, fontWeight:'bold' }}>+</Text>
                             </TouchableOpacity>
                         </View>
@@ -103,9 +150,18 @@ export default class OrderScreen extends Component {
                 </View>
                     }
                         />
+                <View style={{height: 100}}></View>
                 </View>           
-                <ConfirmButton text1="Confirm" text2="Cancel"  button1={() => this.props.navigation.navigate('MenuScreen')} button2={() => this.props.navigation.goBack()} />  
+                <ConfirmButton text1="Confirm" text2="Cancel"  button1={this.confirmHandler} button2={() => this.props.navigation.goBack()} />  
             </View>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return{
+        order: state.order
+    }
+}
+
+export default connect (mapStateToProps)(OrderScreen)
