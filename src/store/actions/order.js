@@ -29,3 +29,24 @@ export const updateOrder = (data) => {
         payload: data
     }
 }
+
+export const getOrder = (transactionId) => {
+    return{
+        type: 'GET_ORDER',
+        payload: axios.get(`${env.host}/order/transaction/${transactionId}`)
+    }
+}
+
+export const patchOder = (data, orderId) => {
+    return{
+        type: 'PATCH_ORDER',
+        payload: axios({
+            url: `${env.host}/order/${orderId}`,
+            method: 'PATCH',
+            data: data,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }
+    )}}

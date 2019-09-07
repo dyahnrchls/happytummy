@@ -24,6 +24,40 @@ const transaction = (state = initialState, action) => {
                 isLoading: false,
                 error: payload.message
             }
+        case 'ADD_TRANSACTION_PENDING':
+            return{
+                ...state,
+                isLoading: true
+            }
+        case 'ADD_TRANSACTION_FULFILLED':
+            return {
+                ...state,
+                item: action.payload.data,
+                isLoading: false
+            }
+        case 'ADD_TRANSACTION_REJECTED':
+            return {
+                ...state,
+                item: null,
+                isLoading: false
+            }
+        case 'UPDATE_TRANSACTION_PENDING':
+            return {
+                ...state,
+                isLoading: true
+            }
+        case 'UPDATE_TRANSACTION_FULFILLED':
+            return {
+                ...state,
+                item: action.payload.data,
+                isLoading: false
+            }
+        case 'UPDATE_TRANSACTION_REJECTED':
+            return {
+                ...state,
+                item: null,
+                isLoading: false
+            }
         default:
             return state
     }
