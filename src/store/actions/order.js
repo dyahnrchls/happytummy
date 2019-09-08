@@ -50,3 +50,10 @@ export const patchOder = (data, orderId) => {
             }
         }
     )}}
+
+export const resetOrder = () => {
+    return{
+        type: 'RESET_ORDER',
+        payload: []
+    }
+}

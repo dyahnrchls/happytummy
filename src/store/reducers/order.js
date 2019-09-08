@@ -2,6 +2,7 @@ const initialState = {
     item: [],
     isLoading: false,
     error: null,
+    dataItem: []
 }
 
 const order = (state = initialState, action) => {
@@ -14,13 +15,13 @@ const order = (state = initialState, action) => {
         case 'POST_ORDER_FULFILLED':
             return{
                 ...state,
-                item: action.payload.data,
+                dataItem: action.payload.data,
                 isLoading: false
             }
         case 'POST_ORDER_REJECTED':
             return{
                 ...state,
-                item: null,
+                dataItem: null,
                 isLoading:false
             }
         case 'GET_ORDER_PENDING':
@@ -68,6 +69,11 @@ const order = (state = initialState, action) => {
             return{
                 ...state,
                 item:[...action.payload]
+            }
+        case 'RESET_ORDER':
+            return{
+                ...state,
+                item: action.payload
             }
         default:
             return state 
