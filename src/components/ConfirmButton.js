@@ -22,7 +22,7 @@ export default class ConfirmButton extends Component {
 
 const styles = StyleSheet.create({
     button1: {
-        width: '45%',
+        width: '40%',
         height: 40,
         backgroundColor: '#27ae60',
         justifyContent: 'center',
@@ -31,10 +31,11 @@ const styles = StyleSheet.create({
         bottom: 0,
         marginBottom: 55,
         borderRadius: 5,
+        marginLeft: 10,
         elevation: 10
     },
     button2: {
-        width: '45%',
+        width: '40%',
         height: 40,
         backgroundColor: '#ff6b6b',
         position: 'absolute',
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         bottom: 0,
         marginBottom: 55,
-        marginLeft: 210,
+        marginLeft: 200,
         borderRadius: 5,
         elevation: 10
     }

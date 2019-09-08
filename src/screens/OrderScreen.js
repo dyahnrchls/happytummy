@@ -95,7 +95,6 @@ class OrderScreen extends Component {
             console.log(data)
             this.props.dispatch(postOrder(data))
         })
-        this.props.order.item.splice(0, (this.props.order.item.length))
         this.props.navigation.navigate('TransactionScreen')
     }
 
@@ -115,7 +114,7 @@ class OrderScreen extends Component {
     render(){
         return(
             <View style={{ backgroundColor: '#dfe6e9' , flex:1}}>
-                <View style={{marginBottom: 10, height: 800}}>
+                <View style={{marginBottom: 10, height: '105%'}}>
                 <Text style={{ paddingLeft: 20, paddingTop: 20, fontSize: 25, fontWeight: 'bold' }}>My Order {this.state.clicked}</Text>   
                 <FlatList style={{ margin: 5 }}
                     data={this.props.order.item}
@@ -150,9 +149,8 @@ class OrderScreen extends Component {
                 </View>
                     }
                         />
-                <View style={{height: 100}}></View>
+                    <ConfirmButton text1="Confirm" text2="Cancel"  button1={this.confirmHandler} button2={() => this.props.navigation.goBack()} />  
                 </View>           
-                <ConfirmButton text1="Confirm" text2="Cancel"  button1={this.confirmHandler} button2={() => this.props.navigation.goBack()} />  
             </View>
         )
     }

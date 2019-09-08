@@ -19,7 +19,6 @@ class MenuScreen extends Component{
 
     constructor(props){
         super(props)
-        
     }
 
     componentDidMount(){
@@ -71,28 +70,24 @@ class MenuScreen extends Component{
         }
     }
 
-    confirmOrder = () => {
-        this.props.dispatch(postOrder())
+    goToOrderScreen = () => {
+        if(this.props.order.item.length == 0){
+            alert('you must order something')
+        }else{
+            this.props.navigation.navigate('OrderScreen')
+        }
     }
 
-    cleanOrder = () => {
-        this.setState({
-            order: []
-        })
-    }
+
     render(){
         console.log(this.props)
         return(
             <View style={{ backgroundColor: '#dfe6e9'}}>
                 <View style={{ paddingTop: 15, paddingBottom: 10,paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#d1d8e0'}}>
                     <Text style={{fontSize:17, fontWeight: 'bold'}}>Table Number: {this.props.navigation.getParam('tableNumber')}</Text>
-                    <Text style={{ fontSize: 17, fontWeight: 'bold' }}>02:13</Text>
                 </View>
                 <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
                     <Text style={{paddingLeft: 10, paddingTop: 5, fontSize:25, fontWeight:'bold'}}>menu</Text>
-                    <TouchableOpacity style={{justifyContent: 'flex-end', flex: 1, alignItems:'flex-end'}} onPress={() => this.props.navigation.navigate('TransactionScreen')}>
-                        <Text style={{ paddingHorizontal: 10, paddingTop: 5, fontSize: 15, fontWeight: 'bold'}}>View Bill</Text>
-                    </TouchableOpacity>
                 </View>
                 <View>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} accessibilityViewIsModal={true} style={{paddingHorizontal: 10,paddingTop:10, flexDirection: 'row'}}>
@@ -105,14 +100,14 @@ class MenuScreen extends Component{
                             )}
                         </ScrollView>
                 </View>
-                <View style={{height:650}}>
+                <View style={{height:'80%'}}>
                     <FlatList style={{ margin: 5 }}
                         data={this.props.menu.item}
                         numColumns={2}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={item => item.id.toString()}
                         renderItem={(item, index) => 
-                            <TouchableOpacity key={index} onPress={() => this.countMenu(item.item)} style={{borderRadius: 20, justifyContent: 'center', marginHorizontal: 10, marginTop: 10, backgroundColor: '#FFFF', width: 180, height: 130,elevation:5}}>
+                            <TouchableOpacity key={index} onPress={() => this.countMenu(item.item)} style={{borderRadius: 20, justifyContent: 'center', marginHorizontal: 10, marginTop: 10, backgroundColor: '#FFFF', width: '45%', height: 130,elevation:5}}>
                                 <ImageBackground source={{ uri: item.item.photoUrl}} imageStyle={{borderRadius:20}} style={{width:'100%', height:'100%', borderRadius: 20}}>
                                     <View style={{ flex: 1, justifyContent: 'flex-end', marginTop: 80, height: '100%', alignItems: 'flex-end', backgroundColor:'rgba(52, 52, 52, 0.8)'}}>
                                         <Text style={{ alignSelf: 'flex-start', padding: 5,fontWeight: 'bold', color:'white',fontSize: 18, marginTop: 10}}>{item.item.name}</Text>
@@ -122,10 +117,7 @@ class MenuScreen extends Component{
                             </TouchableOpacity>
                         }
                     />
-                    <View style={{height:80}}></View>
-                </View>
-                <View>
-                    <OrderButton text="check your order" button={() => this.props.navigation.navigate('OrderScreen')}/>
+                    <OrderButton text="check your order" button={this.goToOrderScreen}/>
                 </View>                
             </View>
         )

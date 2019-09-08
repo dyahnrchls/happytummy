@@ -3,8 +3,8 @@ import { View, Text, FlatList } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
 import OrderButton from '../components/OrderButton'
-import {getOrder} from '../store/actions/order'
-import {getTransaction, updateTransaction} from '../store/actions/transaction'
+import {resetOrder} from '../store/actions/order'
+import {updateTransaction} from '../store/actions/transaction'
 import { connect } from 'react-redux'
 
 class TransactionScreen extends Component {
@@ -30,7 +30,7 @@ class TransactionScreen extends Component {
         let data = this.state.transactionData
         let total = 0
         this.props.order.item.forEach((item) => {
-            total = total + item.price
+            total = total + item.totalPrice
         })
         let newServiceCharge = total * 0.05
         let newTax = total * 0.1
@@ -44,16 +44,6 @@ class TransactionScreen extends Component {
             }))
     }
 
-    getOrderByTransactionId = async () => {
-        try {
-            const id = await AsyncStorage.getItem('TRANSACTION_ID')
-            await this.props.dispatch(getOrder(id))
-        } catch (e) {
-            console.log(e)
-        }
-        this.transactionHandler()
-    }
-
     goToBillScreen = async () => {
         const id = await AsyncStorage.getItem('TRANSACTION_ID')
         let trans = this.state.transactionData
@@ -65,16 +55,16 @@ class TransactionScreen extends Component {
             total: trans.total
         }
         await this.props.dispatch(updateTransaction(data, id))
+        await this.props.dispatch(resetOrder())
         await this.props.navigation.navigate('CallBillScreen')
     }
     
     componentDidMount(){
-        this.getOrderByTransactionId()
+        this.transactionHandler()
     }
 
     
     render() {
-        console.log(this.props.transaction.item)
         let data = this.state.transactionData
         return (
             <View style={{ flex: 1, backgroundColor: '#dfe6e9' }}>
@@ -82,20 +72,16 @@ class TransactionScreen extends Component {
                     <View style={{alignItems: 'center', height: 50}}>
                         <Text style={{paddingTop: 10, fontSize:15, fontWeight:'bold'}}>3 September 2019</Text>
                     </View>
-                    <View style={{marginHorizontal: 20,  borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10, marginBottom: 50}}>
-                    <FlatList
-                        style={{ margin: 5 }}
-                        data={this.props.order.item}
-                        showsVerticalScrollIndicator={false}
-                        keyExtractor={item => item.id.toString()}
-                        renderItem={(item) => 
-                        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-                            <Text style={{fontSize:15, fontWeight:'bold'}}>{item.item.qty} x</Text>
-                            <Text >{item.item.menu.name}</Text>
-                            <Text >{item.item.price}</Text>
-                        </View>
-                    }
-                    />
+                    <View style={{marginHorizontal: 20,  borderBottomWidth: 1, justifyContent: 'space-between', marginVertical: 10, marginBottom: 50}}>
+                    {this.props.order.item.map((item, index) => {
+                        return(
+                            <View key={index} style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{item.qty} x</Text>
+                                <Text >{item.name}</Text>
+                                <Text >{item.totalPrice}</Text>
+                            </View>
+                        )
+                    })}
                     </View>
                     <View style={{marginTop: 10, backgroundColor:'white'}}>
                         <View style={{ flexDirection: 'row-reverse' }}>

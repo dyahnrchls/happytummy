@@ -27,18 +27,22 @@ class MainScreen extends Component{
 
 
     onSubmit = async () => {
-        this.setState({
-            tableNumber: this.state.input,
-            input: ''
-        })
-        await AsyncStorage.setItem('TABLE_NUMBER', `${this.state.tableNumber}`)
-        await this.props.dispatch(addTransaction({
-            tableNumber: parseInt(this.state.tableNumber),
-            isPaid: false
-        }))
-        await AsyncStorage.setItem('TRANSACTION_ID', `${this.props.transaction.item.id}`)
-        console.log(this.props.transaction.item.tableNumber)
-        this.props.navigation.navigate('MenuScreen', {tableNumber: this.state.tableNumber})
+        if(this.state.input.length == 0 || this.state.input == 0){
+            alert('input your table number!!')
+        }else{
+            this.setState({
+                tableNumber: this.state.input,
+                input: ''
+            })
+            await AsyncStorage.setItem('TABLE_NUMBER', `${this.state.tableNumber}`)
+            await this.props.dispatch(addTransaction({
+                tableNumber: parseInt(this.state.tableNumber),
+                isPaid: false
+            }))
+            await AsyncStorage.setItem('TRANSACTION_ID', `${this.props.transaction.item.id}`)
+            console.log(this.props.transaction.item.tableNumber)
+            this.props.navigation.navigate('MenuScreen', {tableNumber: this.state.tableNumber})
+        }
     }
 
     render(){
