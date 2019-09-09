@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, ScrollView, ImageBackground, FlatList } from 'react-native'
-import { Card} from 'native-base'
 
 import OrderButton from '../components/OrderButton'
 

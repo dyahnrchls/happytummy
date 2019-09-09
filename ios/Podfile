@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'shopApp' do
-  # Pods for shopApp
+target 'hungrytummy' do
+  # Pods for hungrytummy
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'
   pod 'React-DevSupport', :path => '../node_modules/react-native/React'
@@ -27,9 +27,7 @@ target 'shopApp' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
-
-  target 'shopAppTests' do
+  target 'hungrytummyTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -37,10 +35,10 @@ target 'shopApp' do
   use_native_modules!
 end
 
-target 'shopApp-tvOS' do
-  # Pods for shopApp-tvOS
+target 'hungrytummy-tvOS' do
+  # Pods for hungrytummy-tvOS
 
-  target 'shopApp-tvOSTests' do
+  target 'hungrytummy-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
