@@ -39,7 +39,7 @@ export default class CallBillScreen extends Component{
     render(){
         return(
             <View style={{flex: 1, justifyContent: 'center', alignItems:'center'}}>
-                <Image source={require('../assets/images/payment.png')} style={{height: '40%', width: '100%'}}/>
+                <Image source={require('../assets/images/card_payment.png')} style={{height: '40%', width: '80%'}}/>
                 <Text>
                     PLEASE BRING THE IPAD TO THE CASHIER
                 </Text>

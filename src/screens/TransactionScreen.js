@@ -3,9 +3,11 @@ import { View, Text, FlatList } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
 import OrderButton from '../components/OrderButton'
+
 import {resetOrder} from '../store/actions/order'
 import {updateTransaction} from '../store/actions/transaction'
 import { connect } from 'react-redux'
+import { convertIDR } from '../utils/helper.js'
 
 class TransactionScreen extends Component {
 
@@ -22,7 +24,8 @@ class TransactionScreen extends Component {
                 serviceCharge: 0,
                 tax: 0,
                 total: 0
-            }
+            },
+            date: Date()
         }
     }
 
@@ -66,11 +69,12 @@ class TransactionScreen extends Component {
     
     render() {
         let data = this.state.transactionData
+        let datenow = this.state.date.split(' ')
         return (
-            <View style={{ flex: 1, backgroundColor: '#dfe6e9' }}>
+            <View style={{ flex: 1, backgroundColor: '#fff1e1' }}>
                 <View style={{backgroundColor:'white', marginVertical: 20, marginHorizontal: 20, height: 300, borderRadius: 5}}>
                     <View style={{alignItems: 'center', height: 50}}>
-                        <Text style={{paddingTop: 10, fontSize:15, fontWeight:'bold'}}>3 September 2019</Text>
+                        <Text style={{paddingTop: 10, fontSize:15, fontWeight:'bold'}}>{datenow[2]} {datenow[1]} {datenow[3]}</Text>
                     </View>
                     <View style={{marginHorizontal: 20,  borderBottomWidth: 1, justifyContent: 'space-between', marginVertical: 10, marginBottom: 50}}>
                     {this.props.order.item.map((item, index) => {
@@ -78,30 +82,31 @@ class TransactionScreen extends Component {
                             <View key={index} style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{item.qty} x</Text>
                                 <Text >{item.name}</Text>
-                                <Text >{item.totalPrice}</Text>
+                                <Text >Rp. {convertIDR(item.totalPrice)}</Text>
                             </View>
                         )
                     })}
                     </View>
                     <View style={{marginTop: 10, backgroundColor:'white'}}>
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{data.subTotal}</Text>
+                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{convertIDR(data.subTotal)}</Text>
                             <Text style={{ paddingVertical: 5, paddingRight: 60 }}>Sub Total</Text>
                         </View>
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{data.discount}</Text>
+                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{convertIDR(data.discount)}</Text>
                             <Text style={{ paddingVertical: 5, paddingRight: 90 }}>Discount</Text>
                         </View>
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{data.serviceCharge}</Text>
+                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{convertIDR(data.serviceCharge)}</Text>
                             <Text style={{ paddingVertical: 5, paddingRight: 60 }}>Service Charge (5%)</Text>
                         </View>
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{data.tax}</Text>
+                            <Text style={{ paddingVertical: 5, paddingRight: 20 }}>{convertIDR(data.tax)}</Text>
                             <Text style={{ paddingVertical: 5, paddingRight: 60 }}>Tax (10%)</Text>
                         </View>
                         <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ paddingVertical: 5, paddingRight: 20, fontWeight: 'bold' }}>{data.total}</Text>
+                            <Text style={{ paddingVertical: 5, paddingRight: 20, fontWeight: 'bold' }}>{convertIDR(data.total)}</Text>
+                            <Text style={{ paddingVertical: 5, fontWeight: 'bold'}}>Rp. </Text>
                             <Text style={{ paddingVertical: 5, paddingRight: 60, fontWeight:'bold' }}>Total</Text>
                         </View>
                     </View>

@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { getCategory } from '../store/actions/category'
 import { getMenu, getMenuCategory } from '../store/actions/menu'
 import { postOrder, addToOrder, updateOrder } from '../store/actions/order'
+import { convertIDR } from '../utils/helper.js'
 
 
 class MenuScreen extends Component{
@@ -81,19 +82,19 @@ class MenuScreen extends Component{
     render(){
         console.log(this.props)
         return(
-            <View style={{ backgroundColor: '#dfe6e9'}}>
-                <View style={{ paddingTop: 15, paddingBottom: 10,paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#d1d8e0'}}>
+            <View style={{ backgroundColor: '#fff1e1'}}>
+                <View style={{ paddingTop: 15, paddingBottom: 10,paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#fff1e1'}}>
                     <Text style={{fontSize:17, fontWeight: 'bold'}}>Table Number: {this.props.navigation.getParam('tableNumber')}</Text>
                 </View>
                 <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-                    <Text style={{paddingLeft: 10, paddingTop: 5, fontSize:25, fontWeight:'bold'}}>menu</Text>
+                    <Text style={{paddingLeft: 10, paddingTop: 5, fontSize:25, fontWeight:'bold'}}>Menu</Text>
                 </View>
                 <View>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} accessibilityViewIsModal={true} style={{paddingHorizontal: 10,paddingTop:10, flexDirection: 'row'}}>
                             {this.props.category.item!==null && this.props.category.item.map((item, index) => {
                                 return(
-                                    <TouchableOpacity key={index} onPress={() => this.getMenuByCategory(item.id)} style={{ marginRight: 15, backgroundColor:'#cd84f1', paddingVertical: 8, paddingHorizontal:15, borderRadius: 10, elevation:8, marginBottom: 10}}>
-                                            <Text style={{fontWeight: 'bold', color: 'white'}}>{item.name}</Text>
+                                    <TouchableOpacity key={index} onPress={() => this.getMenuByCategory(item.id)} style={{ marginRight: 15, backgroundColor:'#ff8d58', paddingVertical: 8, paddingHorizontal:15, borderRadius: 10, elevation:8, marginBottom: 10}}>
+                                            <Text style={{fontWeight: 'bold'}}>{item.name}</Text>
                                     </TouchableOpacity>
                                 )}
                             )}
@@ -110,7 +111,7 @@ class MenuScreen extends Component{
                                 <ImageBackground source={{ uri: item.item.photoUrl}} imageStyle={{borderRadius:20}} style={{width:'100%', height:'100%', borderRadius: 20}}>
                                     <View style={{ flex: 1, justifyContent: 'flex-end', marginTop: 80, height: '100%', alignItems: 'flex-end', backgroundColor:'rgba(52, 52, 52, 0.8)'}}>
                                         <Text style={{ alignSelf: 'flex-start', padding: 5,fontWeight: 'bold', color:'white',fontSize: 18, marginTop: 10}}>{item.item.name}</Text>
-                                        <Text style={{ alignSelf: 'flex-start', paddingLeft: 5, paddingBottom: 5, fontWeight: 'bold', color: 'white', fontSize: 13 }}>Price: {item.item.price}</Text>
+                                        <Text style={{ alignSelf: 'flex-start', paddingLeft: 5, paddingBottom: 5, fontWeight: 'bold', color: 'white', fontSize: 13 }}>Rp. {convertIDR(item.item.price)}</Text>
                                     </View>
                                 </ImageBackground>
                             </TouchableOpacity>

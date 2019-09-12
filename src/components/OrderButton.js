@@ -6,7 +6,7 @@ export default class OrderButton extends Component {
         return (
             <View style={{flex:1, justifyContent:'center', alignItems: 'center'}}>
                 <TouchableOpacity style={styles.button} onPress={this.props.button}>
-                    <Text style={{ fontWeight: 'bold', color:'#dfe6e9'}} >
+                    <Text style={{ fontWeight: 'bold'}} >
                         {this.props.text}
                     </Text>
                 </TouchableOpacity>
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     button: {
         width: '45%',
         height: 40,
-        backgroundColor: '#cd84f1',
+        backgroundColor: '#ff8d58',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',

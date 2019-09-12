@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import {View, Text, TouchableOpacity, Image, FlatList, Alert} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import ConfirmButton from '../components/ConfirmButton'
+
 import { connect } from 'react-redux'
 import {updateOrder, postOrder} from '../store/actions/order'
-import AsyncStorage from '@react-native-community/async-storage'
+import {convertIDR} from '../utils/helper.js'
 
 class OrderScreen extends Component {
     static navigationOptions = {
@@ -113,7 +115,7 @@ class OrderScreen extends Component {
 
     render(){
         return(
-            <View style={{ backgroundColor: '#dfe6e9' , flex:1}}>
+            <View style={{ backgroundColor: '#fff1e1' , flex:1}}>
                 <View style={{marginBottom: 10, height: '105%'}}>
                 <Text style={{ paddingLeft: 20, paddingTop: 20, fontSize: 25, fontWeight: 'bold' }}>My Order {this.state.clicked}</Text>   
                 <FlatList style={{ margin: 5 }}
@@ -121,7 +123,7 @@ class OrderScreen extends Component {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={item => item.id.toString()}
                     renderItem={(item) => 
-                <View style={{ borderRadius: 5, marginHorizontal: 10, marginTop: 20, padding: 10, backgroundColor: '#ecf0f1', flexDirection: 'row', justifyContent: 'space-between', height: 80, elevation: 8}}>
+                <View style={{ borderRadius: 5, marginHorizontal: 10, marginTop: 20, padding: 10, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', height: 80, elevation: 8}}>
                     <View style={{flexDirection:'row'}}>
                             <Image source={{ uri: item.item.photoUrl }} style={{width:70, height:'100%'}} />
                         <View style={{marginLeft:10}}>
@@ -129,20 +131,20 @@ class OrderScreen extends Component {
                                 <Text style={{ fontSize: 18 }}>{item.item.name}</Text>
                             </View>
                             <View style={{marginVertical:10}}>
-                                <Text style={{fontSize: 15, alignSelf:'flex-start'}}>Price: {item.item.totalPrice}</Text>
+                                <Text style={{fontSize: 15, alignSelf:'flex-start'}}>Rp. {convertIDR(item.item.totalPrice)}</Text>
                             </View>
                         </View>
                     </View>
                     <View style={{ justifyContent: 'center', alignItems: 'center'}}>
                         <View style={{ flexDirection: 'row', borderRadius: 5}}>
-                            <TouchableOpacity style={{ paddingHorizontal: 10, backgroundColor:'#dfe4ea',borderRadius: 50, height:30}} onPress={() => this.decrementHandler(item.item.id)}>
-                                <Text style={{fontSize:18, fontWeight:'bold'}}>-</Text>
+                            <TouchableOpacity style={{ paddingHorizontal: 10,borderRadius: 50, height:30}} onPress={() => this.decrementHandler(item.item.id)}>
+                                <Text style={{fontSize:30, fontWeight:'bold', color:'#ff8d58'}}>-</Text>
                             </TouchableOpacity >
                             <View style={{ paddingHorizontal: 10}}>
-                                <Text style={{ alignSelf:'center', fontSize: 18 , fontWeight:'bold'}}>{item.item.qty}</Text>
+                                <Text style={{ alignSelf:'center', fontSize: 25}}>{item.item.qty}</Text>
                             </View>
-                                    <TouchableOpacity style={{ paddingHorizontal: 10, borderRadius: 50, backgroundColor: '#dfe4ea'}} onPress={() => this.incrementHandler(item.item.id)}>
-                                <Text style={{ fontSize: 18, fontWeight:'bold' }}>+</Text>
+                                    <TouchableOpacity style={{ paddingHorizontal: 10, borderRadius: 50}} onPress={() => this.incrementHandler(item.item.id)}>
+                                <Text style={{ fontSize: 30, fontWeight:'bold', color:'#ff8d58' }}>+</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
